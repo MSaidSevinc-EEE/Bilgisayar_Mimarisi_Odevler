@@ -1,0 +1,58 @@
+.data 
+msg1: .asciiz "birinci sayiyi giriniz"
+msg2: .asciiz "Ikinci sayiyi giriniz"
+msg3: .asciiz "Girilen degerler birbirine esit"
+msg4: .asciiz "ilk girilen sayi buyuk:  "
+msg5: .asciiz "ikinci girilen sayi buyuk:  "
+.text
+
+main:
+
+addi $v0, $zero, 5  # Birinci değer alınır 
+syscall
+add $t1, $v0, $zero
+
+
+addi $v0, $zero, 5  # ikinci değer alınır 
+syscall
+add $t2, $v0, $zero
+
+
+beq $t1, $t2, esitdurum   # t1 ile t2 eşit ise 
+j kiyaslama      # eşit değil ise karşılaştırma kısmına gidecek 
+
+esitdurum:
+la $a0, msg3
+addi $v0, $zero, 4
+syscall
+addi $v0, $zero, 10
+syscall
+ 
+ 
+kiyaslama:
+slt $t0, $t1, $t2  #t1 t2den kucukse 1
+beq $t0, $zero, ilkdurum
+j ikincidurum
+
+ilkdurum:  # t1 büyüktür t2 
+
+la $a0, msg4
+addi $v0, $zero, 4
+syscall
+add $a0, $t1, $zero
+addi $v0,$zero,1
+syscall
+
+addi $v0, $zero, 10
+syscall
+
+ikincidurum:  # t2 büyüktür t2 
+la $a0, msg5
+addi $v0, $zero, 4
+syscall
+add $a0, $t2, $zero
+addi $v0,$zero,1
+syscall
+
+addi $v0, $zero, 10
+syscall
