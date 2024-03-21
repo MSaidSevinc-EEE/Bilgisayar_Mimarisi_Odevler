@@ -1,0 +1,122 @@
+.data 
+msg1:.asciiz "1,2 VEYA 3 SAYILARINAN BİRİNİ GİRİNİZ"
+msg2:.asciiz "KUP SECILDI bir a degeri giriniz"
+msg3:.asciiz "Küpün Alani:"
+msg4:.asciiz "Kürenin Alanı"
+msg5:.asciiz "r degerini giriniz"
+msg6:.asciiz "Silindirin Alani" 
+msg7:.asciiz "h degerini giriniz" 
+msg8: .asciiz "Yanlıs girdi girdiniz"
+
+Alandizisi: .space 40
+.text
+
+main:
+add $t0, $zero, 0 
+la $t9 ,Alandizisi    # $t9 --> AlanDisizinin taban adresi (base address)
+loop: 
+ addi $v0, $zero, 5  # Birinci değer alınır 
+ syscall  # 1. sistem çağırısı 
+ add $t1, $v0, $zero
+
+ add $t2, $zero, 1   # küp
+ add $t3, $zero, 2   # küre 
+ add $t4, $zero, 3   # silindir 
+
+
+ beq $t1, $t2, esit  # t1 ile t2 eşit ise küpün alanı hesaplanır --------------------------------------------
+ j esitdegil  # eşit değil ise karşılaştırma kısmına gidecek 
+
+
+ esit:   ## Küpün alanı hesaplanıyor ------------------------------------------------------------------------
+ add $t6, $zero, 6
+ #la $a0, msg2
+ addi $v0, $zero, 5   # a degeri alınır 
+ syscall  # 2. sistem çağırısı
+ add $t5, $v0, $zero
+ mul $t5, $t5, $t5 
+ mul $t5, $t6, $t5 
+
+ la $a0, msg3
+ addi $v0, $zero, 4
+ syscall
+ add $a0, $t5 $zero
+ addi $v0,$zero,1
+ syscall 
+
+
+ esitdegil: 
+ beq $t1, $t3, esit2  # t1 ile t3 eşit ise kürenin alanı hesaplanır-------------------------------------------- 
+ j esitdegil2   # eşit değil ise karşılaştırma kısmına gidecek 
+
+  esit2: # kürenin alanını hesaplar 
+   add $t6, $zero, 4
+   add $a1, $zero, 314
+   add $a2, $zero, 100
+
+
+   addi $v0, $zero, 5   # r degeri alınır 
+   syscall  # 3. sistem çağırısı 
+   add $t5, $v0, $zero
+
+   mul $t5, $t5, $t5 
+   mul $t5, $t5, $a1
+   mul $t5, $t5, $t6
+   div $t5, $t5, $a2
+
+   la $a0, msg4
+   addi $v0, $zero, 4
+   syscall
+   add $a0,$t5,$zero
+   addi $v0,$zero,1
+   syscall
+
+
+  esitdegil2: 
+     beq $t1, $t4, esit3 # t1 ile t3 eşit ise silindirin alanı hesaplanır
+     j esitdegil3  #eşit değil ise karşılaştırma kısmına gidecek 
+
+       esit3: 
+       add $t6, $zero, 2
+       add $a1, $zero, 314
+       add $a2, $zero, 100
+
+       la $a0, msg5
+       addi $v0, $zero, 5  # r degeri alınır 
+       syscall  # 4. sistem çağırısı 
+       add $t5, $v0, $zero
+
+       addi $v0, $zero, 5  # h degeri alınır 
+       syscall  # 5. sistem çağırısı 
+       add $t7, $v0, $zero
+
+       mul $a3, $t5, $t6
+       mul $a3, $a3, $a1 
+       mul $a3, $a3, $t7
+       div $a3, $a3, $a2
+
+       mul $t5, $t5, $t5
+       mul $t5, $t5, $t6
+       mul $t5, $t5, $a1
+       div $t5, $t5, $a2
+
+       add $t5, $t5, $a3 
+
+       la $a0, msg6
+       addi $v0, $zero, 4
+       syscall
+       add $a0, $t5 $zero
+       addi $v0,$zero,1
+       syscall
+       
+       esitdegil3:        
+        # Bütün sonuçlarda $t5 deki değerim benim alan değerime eşit olmaktadır. 
+
+sw $t5, 0($t9)     # Elde deilen alan değerini dizinin içine atma 
+addi $t9, $t9, 4   # Diziye her bir eleman atandiktan sonra dizinin adresini bir arttırma işlemi uygulanmaktadır. 
+addi $t0, $t0, 1
+add $a3, $zero, 10      # $t1 kaydına 10 değerini yükle
+bne $t0, $a3, loop   # Eğer $t0 değeri $a3 değerine eşit değilse döngüyü tekrarla
+
+
+# sw $t9, $t5 
