@@ -115,8 +115,5 @@ loop:
 sw $t5, 0($t9)     # Elde deilen alan değerini dizinin içine atma 
 addi $t9, $t9, 4   # Diziye her bir eleman atandiktan sonra dizinin adresini bir arttırma işlemi uygulanmaktadır. 
 addi $t0, $t0, 1
-add $a3, $zero, 10      # $t1 kaydına 10 değerini yükle
+add $a3, $zero, 10      # $a3 kaydına 10 değerini yükle
 bne $t0, $a3, loop   # Eğer $t0 değeri $a3 değerine eşit değilse döngüyü tekrarla
-
-
-# sw $t9, $t5 
