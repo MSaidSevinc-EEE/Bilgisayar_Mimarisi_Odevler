@@ -46,7 +46,7 @@ syscall
 addi $v0, $zero, 10
 syscall
 
-ikincidurum:  # t2 büyüktür t2 
+ikincidurum:  # t2 büyüktür t1
 la $a0, msg5
 addi $v0, $zero, 4
 syscall
